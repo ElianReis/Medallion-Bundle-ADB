@@ -1,0 +1,19 @@
+bundle:
+  name: customers
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: {HOST}
+  prod:
+    mode: production
+    workspace:
+      host: {USER_NAME}
+      root_path: /Users/{USER_NAME}/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      user_name: {USER_NAME}

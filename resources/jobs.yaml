@@ -1,0 +1,60 @@
+# The main job for customer pipeline.
+resources:
+  jobs:
+    customers:
+      name: customers
+      description: Workflow to use the customers and orders sampling in Databricks
+
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 600
+
+      schedule:
+        quartz_cron_expression: "0 0 8 * * ?"
+        timezone_id: America/Sao_Paulo
+
+      parameters:
+        - name: api_authentication
+          default: {API_AUTH}
+        - name: api_endpoint
+          default: {API_ENDPOINT}
+
+      email_notifications:
+        on_failure:
+          - {USER_NAME}
+
+      tasks:
+        - task_key: bronze
+          notebook_task:
+            notebook_path: bronze/bronze_orders.sql
+            source: GIT
+          existing_cluster_id: 0205-131330-u0k38th6
+          max_retries: 1
+          min_retry_interval_millis: 900000
+
+        - task_key: silver
+          depends_on:
+            - task_key: bronze
+          notebook_task:
+            notebook_path: silver/silver_orders.sql
+            source: GIT
+          existing_cluster_id: 0205-131330-u0k38th6
+
+        - task_key: gold
+          depends_on:
+            - task_key: silver
+          notebook_task:
+            notebook_path: gold/gold_orders.sql
+            source: GIT
+          existing_cluster_id: 0205-131330-u0k38th6
+
+      git_source:
+        git_url: {GIT_URL}
+        git_provider: {GIT_PROVIDER}
+        git_branch: {GIT_BRANCH}
+
+      tags:
+        output: orders
+        source: example

@@ -1,2 +1,46 @@
-# databricks-bundle-medallion
-Test databricks bundle to generate a workflow of a SQL sampling pipeline
+# Databricks Bundle Medallion
+
+This project has the idea of testing the Databricks Bundle tool to generate a entire workflow in develop environment. Using the Customers and Orders dataset on Databricks
+
+This will include a SQL Data Modelling following the Kimball definitions.
+
+## Getting started
+
+1. Install the Databricks CLI from https://docs.databricks.com/dev-tools/cli/databricks-cli.html
+
+2. Authenticate to your Databricks workspace:
+    ```
+    $ databricks configure
+    ```
+
+3. It is important to create the env file that contain variables such as git informations, username on databricks and so on. Check the jobs yaml in resources and the databricks.yaml in root folder.
+
+
+3. To deploy a development copy of this project, type:
+    ```
+    $ databricks bundle deploy --target dev
+    ```
+    (Note that "dev" is the default target, so the `--target` parameter
+    is optional here.)
+
+    This deploys everything that's defined for this project.
+    For example, the default template would deploy a job called
+    `[dev yourname] example_job` to your workspace.
+    You can find that job by opening your workpace and clicking on **Workflows**.
+
+4. Similarly, to deploy a production copy, type:
+   ```
+   $ databricks bundle deploy --target prod
+   ```
+
+5. To run a job or pipeline, use the "run" command:
+   ```
+   $ databricks bundle run
+   ```
+
+6. Optionally, install developer tools such as the Databricks extension for Visual Studio Code from
+   https://docs.databricks.com/dev-tools/vscode-ext.html.
+
+7. For documentation on the Databricks asset bundles format used
+   for this project, and for CI/CD configuration, see
+   https://docs.databricks.com/dev-tools/bundles/index.html.
